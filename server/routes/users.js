@@ -3,7 +3,7 @@ var router = express.Router();
 let mongoose = require("mongoose");
 let goods = require("../modules/goods");
 
-mongoose.connect("mongodb://localhost:27017/product");
+mongoose.connect("mongodb://localhost:27017/Product");
 
 const con = mongoose.connection;
 con.on("error",()=>{
@@ -23,16 +23,16 @@ con.on("close",()=>{
 router.get('/', function(req, res, next) {
 
   res.setHeader("Access-Control-Allow-Origin","*");
+  let page = parseInt(req.param("page"));
+  let pageSize = 8;
+  let skip = (page-1)*pageSize;
 
-  goods.find({}).exec((err,data)=>{
+  goods.find({}).skip(skip).limit(pageSize).exec((err,data)=>{
     if(err){
       return console.log(err);
     }
-
     res.send(data);
   });
-
-
 
 });
 
